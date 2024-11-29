@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Subir Calificaciones</title>
+    <script>
+        function calcularCalificacion() {
+            const ser = parseFloat(document.getElementById('ser').value) || 0;
+            const saberHacer = parseFloat(document.getElementById('saber_hacer').value) || 0;
+            const saber = parseFloat(document.getElementById('saber').value) || 0;
+            const final = (ser * 0.2) + (saberHacer * 0.5) + (saber * 0.3);
+            document.getElementById('calificacion_final').innerText = "Calificación Final: " + final.toFixed(2);
+        }
+    </script>
+</head>
+<body>
+    <form action="subir_calificaciones.php" method="POST">
+        <select name="id_estudiante" required></select>
+        <select name="id_materia" required></select>
+        <input type="number" id="ser" name="ser" oninput="calcularCalificacion()">
+        <input type="number" id="saber_hacer" name="saber_hacer" oninput="calcularCalificacion()">
+        <input type="number" id="saber" name="saber" oninput="calcularCalificacion()">
+        <p id="calificacion_final">Calificación Final: 0.00</p>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>
