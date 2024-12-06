@@ -17,7 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password_verify($contraseña, $user['contraseña'])) {
             $_SESSION['id_usuario'] = $user['id_usuario'];
             $_SESSION['rol'] = $user['rol'];
-            header("Location: dashboard.php");
+            $_SESSION['nombre'] = $user['nombre']; // Asegúrate de incluir esta línea
+        
+            // Redirigir según el rol
+            if ($user['rol'] === 'administrador') {
+                header('Location: admin_dashboard.php');
+            } elseif ($user['rol'] === 'maestro') {
+                header('Location: maestro_dashboard.php');
+            } elseif ($user['rol'] === 'estudiante') {
+                header('Location: estudiante_dashboard.php');
+            }
+            exit;
         } else {
             echo "Contraseña incorrecta.";
         }
