@@ -2,24 +2,41 @@
 session_start();
 include 'db_connection.php';
 
-// Verificar si el usuario tiene acceso
+// Verificar si el usuario tiene acceso como administrador
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'administrador') {
-    header('Location: index.php');
+    header('Location: login.php');
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nombre = $_POST['nombre'];
     $grupo = $_POST['grupo'];
 
-    $sql = "INSERT INTO estudiantes (nombre, grupo) VALUES (?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('ss', $nombre, $grupo);
-    $stmt->execute();
+    // Insertar nuevo estudiante en la tabla 'estudiantes'
+    $sql_estudiante = "INSERT INTO estudiantes (nombre) VALUES (?)";
+    $stmt_estudiante = $conn->prepare($sql_estudiante);
+    $stmt_estudiante->bind_param('s', $nombre);
+    $stmt_estudiante->execute();
 
+    // Obtener el ID del estudiante recién creado
+    $id_estudiante = $conn->insert_id;
+
+    // Asignar al estudiante un grupo (opcional, si lo hay)
+    if ($grupo) {
+        $sql_grupo = "INSERT INTO inscripciones (id_estudiante, id_grupo) VALUES (?, ?)";
+        $stmt_grupo = $conn->prepare($sql_grupo);
+        $stmt_grupo->bind_param('ii', $id_estudiante, $grupo);
+        $stmt_grupo->execute();
+    }
+
+    // Redirigir a la lista de estudiantes
     header('Location: gestionar_estudiantes.php');
     exit;
 }
+
+// Consultar todos los grupos disponibles
+$sql_grupos = "SELECT id_grupo, nombre FROM grupos";
+$grupos_result = $conn->query($sql_grupos);
 ?>
 
 <!DOCTYPE html>
@@ -41,13 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="mb-3">
                 <label for="grupo" class="form-label">Grupo:</label>
-                <input type="text" name="grupo" id="grupo" class="form-control" required>
+                <select name="grupo" id="grupo" class="form-select">
+                    <option value="" disabled selected>Selecciona un grupo</option>
+                    <?php while ($grupo = $grupos_result->fetch_assoc()): ?>
+                        <option value="<?= $grupo['id_grupo'] ?>"><?= $grupo['nombre'] ?></option>
+                    <?php endwhile; ?>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Crear Estudiante</button>
         </form>
     </div>
-    <div class="text-center mt-4">
-                <a href="admin_dashboard.php" class="btn btn-danger btn-lg">Regresar</a>
-            </div>
 </body>
 </html>

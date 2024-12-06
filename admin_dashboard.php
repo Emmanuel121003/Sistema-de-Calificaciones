@@ -26,6 +26,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] !== 'administrador') {
             <div class="d-flex justify-content-around flex-wrap gap-3">
                 <a href="gestionar_usuarios.php" class="btn btn-primary btn-lg">Gestionar Usuarios</a>
                 <a href="gestionar_materias.php" class="btn btn-secondary btn-lg">Gestionar Materias</a>
+                <a href="gestionar_estudiantes.php" class="btn btn-warning btn-lg">Gestionar Estudiantes</a>
                 <a href="logout.php" class="btn btn-danger btn-lg">Cerrar Sesión</a>
             </div>
         </div>

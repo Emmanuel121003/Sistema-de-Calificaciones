@@ -80,9 +80,6 @@ if (isset($_GET['id'])) {
             </div>
             <button type="submit" class="btn btn-primary">Actualizar Materia</button>
         </form>
-        <div class="mt-3">
-                <a href="admin_dashboard.php" class="btn btn-danger btn-lg">Regresar</a>
-            </div>
     </div>
 </body>
 </html>
